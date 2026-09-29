@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import '../../domain/models/note.dart';
 
-import '../../data/entities/note.dart';
 
 class NoteCard extends StatelessWidget {
   final Note note;

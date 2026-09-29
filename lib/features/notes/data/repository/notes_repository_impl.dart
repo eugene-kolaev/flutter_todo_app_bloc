@@ -1,9 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/notes_table.dart';
-import '../../domain/models/note_model.dart';
+import '../../domain/models/note.dart';
+import '../dto/note_model.dart';
 import '../../domain/repository/notes_repository.dart';
-import '../entities/note.dart';
 
 
 class NotesRepositoryImpl implements NotesRepository {

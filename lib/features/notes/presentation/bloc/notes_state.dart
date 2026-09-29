@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../data/entities/note.dart';
+
+import '../../domain/models/note.dart';
 
 part 'notes_state.freezed.dart';
 

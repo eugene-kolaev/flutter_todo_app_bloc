@@ -1,4 +1,4 @@
-import '../../data/entities/note.dart';
+import '../models/note.dart';
 
 abstract class NotesRepository {
   Future<List<Note>> getAll();

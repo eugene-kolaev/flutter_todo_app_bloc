@@ -1,4 +1,6 @@
-import '../../data/entities/note.dart';
+
+
+import '../../domain/models/note.dart';
 
 class NoteModel {
   final String id;

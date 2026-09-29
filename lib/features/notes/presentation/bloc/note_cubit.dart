@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../data/entities/note.dart';
+
+import '../../domain/models/note.dart';
 import '../../domain/repository/notes_repository.dart';
 import 'notes_state.dart';
 
