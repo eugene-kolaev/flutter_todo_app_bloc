@@ -1,93 +1,122 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-
-import '../bloc/note_cubit.dart';
-import '../bloc/notes_state.dart';
+import 'package:flutter_todo_app/core/router/app_router.dart';
+import 'package:flutter_todo_app/features/notes/presentation/bloc/note_bloc.dart';
 import '../widgets/note_card.dart';
 
+@RoutePage()
 class NotesPage extends StatelessWidget {
   const NotesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return BlocListener<NoteBloc, NoteState>(
+      listenWhen: (previous, current) =>
+      current.lastCreatedId != null &&
+          previous.lastCreatedId != current.lastCreatedId,
+      listener: (context, state) {
+        context.router.push(EditNoteRoute(id: state.lastCreatedId!));
+        context.read<NoteBloc>().add(const NoteResetCreated());
+      },
+      child: Scaffold(
         backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
-        centerTitle: true,
-        title: const Text(
-          'Notes',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 36),
+        appBar: AppBar(
+          backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
+          centerTitle: true,
+          title: const Text(
+            'Notes',
+            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 36),
+          ),
         ),
-      ),
-      body: Container(
-        color: const Color.fromRGBO(220, 220, 220, 1),
-        width: double.infinity,
-        child: BlocBuilder<NotesCubit, NotesState>(
+        body: BlocBuilder<NoteBloc, NoteState>(
           builder: (context, state) {
-            return switch (state) {
-              NotesInitial() || NotesLoading() =>
-              const Center(child: CircularProgressIndicator()),
-              NotesError(:final message) =>
-                  Center(child: Text(message)),
-              NotesEmpty() =>
-              const Center(child: Text('There are no notes yet')),
-              NotesLoaded(:final notes) =>
-                  ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 100),
-                    itemCount: notes.length,
-                    itemBuilder: (context, index) {
-                      final note = notes[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8, left: 16, right: 16, bottom: 16,
-                        ),
-                        child: NoteCard(
-                          note: note,
-                          onTap: () => context.push('/edit/${note.id}'),
-                          onDelete: () => _handleDelete(context, note.id),
-                        ),
-                      );
-                    },
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state.hasError) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        state.error!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.read<NoteBloc>().add(const NoteLoad()),
+                        child: const Text("Повторить"),
+                      ),
+                    ],
                   ),
-            };
+                ),
+              );
+            }
+
+            if (state.isEmpty) {
+              return const Center(child: Text('There are no notes yet'));
+            }
+
+            return ListView.builder(
+              padding: EdgeInsets.only(bottom: 100),
+              itemCount: state.notes.length,
+              itemBuilder: (context, index) {
+                final note = state.notes[index];
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8,
+                    left: 16,
+                    right: 16,
+                    bottom: 16,
+                  ),
+                  child: NoteCard(
+                    note: note,
+                    onTap: () => context.router.push(EditNoteRoute(id: note.id)),
+                    onDelete: () => _handleDelete(context, note.id),
+                  ),
+                );
+              },
+            );
           },
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: BlocBuilder<NotesCubit, NotesState>(
-        builder: (context, state) {
-          final isReady = state is NotesLoaded || state is NotesEmpty;
-          if (!isReady) return const SizedBox.shrink();
-          return FloatingActionButton(
-            onPressed: () => _handleCreate(context),
-            tooltip: 'add',
-            backgroundColor: Colors.blue,
-            shape: const CircleBorder(),
-            child: const Icon(Icons.add, color: Colors.white),
-          );
-        },
-      ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: BlocBuilder<NoteBloc, NoteState>(
+          builder: (context, state) {
+            if (state.isLoading || !state.isLoaded) {
+              return const SizedBox.shrink();
+            }
+            return FloatingActionButton(
+              onPressed: () => _handleCreate(context),
+              tooltip: 'add',
+              backgroundColor: Colors.blueAccent,
+              shape: const CircleBorder(),
+              child: Icon(Icons.add, color: Colors.white),
+            );
+          },
+        ),
+    ),
     );
   }
 
-  Future<void> _handleCreate(BuildContext context) async {
-    final cubit = context.read<NotesCubit>();
-    final id = await cubit.create();
-    if (!context.mounted) return;
-    context.push('/edit/$id');
+  void _handleCreate(BuildContext context) {
+    debugPrint('FAB Pressed');
+    context.read<NoteBloc>().add(const NoteCreate());
   }
 
   Future<void> _handleDelete(BuildContext context, String id) async {
-    final cubit = context.read<NotesCubit>();
-    final messenger = ScaffoldMessenger.of(context);
-
-    await cubit.delete(id);
-
-    messenger
+    context.read<NoteBloc>().add(NoteDelete(id: id));
+    ScaffoldMessenger.of(context)
       ..clearSnackBars()
       ..showSnackBar(
-        const SnackBar(content: Text('Note deleted'), duration: Duration(seconds: 2)),
+        const SnackBar(
+          content: Text('Note deleted'),
+          duration: Duration(seconds: 2),
+        ),
       );
   }
 }

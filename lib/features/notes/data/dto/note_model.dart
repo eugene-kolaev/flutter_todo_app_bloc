@@ -1,17 +1,16 @@
-
-
+import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/models/note.dart';
+part 'note_model.freezed.dart';
 
-class NoteModel {
-  final String id;
-  final String note;
-  final String date;
+@freezed
+abstract class NoteModel with _$NoteModel {
+  const NoteModel._();
 
-  const NoteModel({
-    required this.id,
-    required this.note,
-    required this.date,
-  });
+  const factory NoteModel({
+    required String id,
+    required String note,
+    required String date,
+  }) = _NoteModel;
 
   factory NoteModel.fromMap(Map<String, Object?> map) {
     return NoteModel(
@@ -22,10 +21,10 @@ class NoteModel {
   }
 
   Map<String, Object?> toMap() {
-    return {
+    return{
       'id': id,
       'note': note,
-      'date': date,
+      'date': date
     };
   }
 
@@ -41,7 +40,7 @@ class NoteModel {
     return NoteModel(
       id: note.id,
       note: note.text,
-      date: note.date.toIso8601String(),
+      date: note.date.toIso8601String()
     );
   }
 }

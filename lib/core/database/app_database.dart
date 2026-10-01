@@ -1,19 +1,20 @@
+import 'package:flutter_todo_app/core/database/database_config.dart';
+import 'package:injectable/injectable.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 import 'notes_table.dart';
 
-class AppDatabase {
-  static const dbFileName = 'notes_database.db';
-  static const dbVersion = 1;
-
-  AppDatabase._();
+@module
+abstract class AppDatabase {
 
 
-  static Future<Database> open() async {
-    final path = p.join(await getDatabasesPath(), dbFileName);
+  @preResolve
+  @singleton
+  Future<Database> get database async {
+    final path = p.join(await getDatabasesPath(), DatabaseConfig.dbFileName);
     return openDatabase(
       path,
-      version: dbVersion,
+      version: DatabaseConfig.dbVersion,
       onCreate: (db, version) async {
         await db.execute(NotesTable.createTable);
       },

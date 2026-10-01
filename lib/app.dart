@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'core/di/injector.dart';
 import 'core/router/app_router.dart';
-import 'features/notes/domain/repository/notes_repository.dart';
-import 'features/notes/presentation/bloc/note_cubit.dart';
+import 'features/notes/presentation/bloc/note_bloc.dart';
 
-class App extends StatelessWidget {
-  final NotesRepository repository;
-  const App({super.key, required this.repository});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final _appRouter = AppRouter();
+
     return BlocProvider(
-      create: (_) => NotesCubit(repository)..load(),
+      create: (_) => getIt<NoteBloc>()..add(const NoteLoad()),
       child: MaterialApp.router(
-        title: 'Diary app',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
-        routerConfig: appRouter,
+        title: 'Diary',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: Colors.indigo,
+        ),
+        routerConfig: _appRouter.config(),
       ),
     );
   }

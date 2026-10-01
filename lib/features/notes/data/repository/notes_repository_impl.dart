@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/notes_table.dart';
@@ -5,7 +6,7 @@ import '../../domain/models/note.dart';
 import '../dto/note_model.dart';
 import '../../domain/repository/notes_repository.dart';
 
-
+@LazySingleton(as: NotesRepository)
 class NotesRepositoryImpl implements NotesRepository {
   final Database db;
 

@@ -51,6 +51,8 @@ class NoteCard extends StatelessWidget {
               Text(
                 note.text.isEmpty ? '(Empty note)' : note.text,
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 16),
               Container(

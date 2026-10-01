@@ -1,20 +1,22 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../domain/models/note.dart';
-import '../bloc/note_cubit.dart';
-import '../bloc/notes_state.dart';
+import '../bloc/note_bloc.dart';
 
+
+@RoutePage()
 class EditNotePage extends StatelessWidget {
   final String id;
 
-  const EditNotePage({super.key, required this.id});
+  const EditNotePage({super.key, @PathParam('id') required this.id});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NotesCubit, NotesState>(
+    return BlocBuilder<NoteBloc, NoteState>(
       builder: (context, state) {
         final note = _findNote(state, id);
 
@@ -29,8 +31,7 @@ class EditNotePage extends StatelessWidget {
     );
   }
 
-  static Note? _findNote(NotesState state, String id) {
-    if (state is! NotesLoaded) return null;
+  static Note? _findNote(NoteState state, String id) {
     for (final n in state.notes) {
       if (n.id == id) return n;
     }
@@ -116,9 +117,7 @@ class _EditNoteViewState extends State<_EditNoteView> {
   }
 
   Future<void> _onSave(BuildContext context) async {
-    final cubit = context.read<NotesCubit>();
-    await cubit.updateText(widget.note.id, _controller.text);
-    if (!context.mounted) return;
-    context.pop();
+    context.read<NoteBloc>().add(NoteUpdate(id: widget.note.id, text: _controller.text));
+    context.router.pop();
   }
 }
