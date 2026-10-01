@@ -1,8 +1,23 @@
 import 'dart:math';
 
-class RandomValues {
-  static final random = Random();
-  static final notes = [
+import 'package:flutter_todo_app/features/notes/domain/models/note.dart';
+import 'package:uuid/uuid.dart';
+
+abstract class NoteFactory {
+  Note random({
+    String? id,
+    String? text,
+    DateTime? date,
+  });
+  List<Note> list({int count});
+}
+
+class NoteFactoryImpl implements NoteFactory {
+  final Random _random;
+
+  NoteFactoryImpl({Random? seed}) : _random = seed ?? Random();
+
+  static const _text = [
     "Набросать схему идеального утра",
     "Список из 10 книг на этот год",
     "Придумать название для блога",
@@ -24,34 +39,20 @@ class RandomValues {
     "Список фильмов от друзей",
     "Одним предложением: чем сегодня день особенный",
   ];
-  static final dates = [
-    "12 03 2025",
-    "28 07 2025",
-    "04 11 2025",
-    "19 02 2025",
-    "30 09 2025",
-    "15 12 2025",
-    "06 05 2025",
-    "22 08 2025",
-    "17 01 2025",
-    "09 10 2025",
-    "14 01 2026",
-    "25 04 2026",
-    "03 06 2026",
-    "07 02 2026",
-    "19 05 2026",
-    "11 03 2026",
-    "01 07 2026",
-    "24 06 2025",
-    "10 04 2025",
-    "17 07 2026",
-  ];
 
-  static String randomNote() {
-    return notes[random.nextInt(notes.length - 1)].toString();
+  @override
+  Note random({
+    String? id,
+    String? text,
+    DateTime? date,
+}) {
+    return Note(
+      id: id ?? const Uuid().v4(),
+      text: text ?? _text[_random.nextInt(_text.length)],
+      date: date ?? DateTime(2025, 1, 1).add(Duration(days: _random.nextInt(365))),
+    );
   }
 
-  static String randomDate() {
-    return dates[random.nextInt(dates.length)];
-  }
+  @override
+  List<Note> list({int count = 10}) => List.generate(count, (_) => random());
 }
