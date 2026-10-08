@@ -10,7 +10,7 @@ Future<void> showAuthRevealTransition({
   required VoidCallback onRevealComplete,
 }) async {
   final theme = Theme.of(context);
-  final revealColor = color ?? theme.colorScheme.primary;
+  final revealColor = Colors.grey.shade700;
 
   final renderBox = buttonKey.currentContext?.findRenderObject() as RenderBox?;
   if (renderBox == null) {

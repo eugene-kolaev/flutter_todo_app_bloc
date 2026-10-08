@@ -6,26 +6,39 @@ import 'package:flutter_todo_app/core/router/app_router.dart';
 import 'package:flutter_todo_app/features/auth/presentation/widgets/auth_form.dart';
 import 'package:flutter_todo_app/features/auth/presentation/widgets/auth_scaffold.dart';
 
+import '../../../../core/di/injector.dart';
 import '../bloc/auth_bloc.dart';
+import '../widgets/auth_reveal_transition.dart';
 
 @RoutePage()
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _submitButtonKey = GlobalKey();
+  bool _revealStarted = false;
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-      listenWhen: (prev, curr) => curr.hasError && prev.error != curr.error,
+      listenWhen: (prev, curr) =>
+      !prev.isAuthenticated && curr.isAuthenticated,
       listener: (context, state) {
-        ScaffoldMessenger.of(context)
-          ..clearSnackBars()
-          ..showSnackBar(
-            SnackBar(
-              content: Text(state.error!),
-              backgroundColor: Colors.red.shade700,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+        if (_revealStarted) return;
+        _revealStarted = true;
+
+        showAuthRevealTransition(
+          context: context,
+          buttonKey: _submitButtonKey,
+          color: Theme.of(context).colorScheme.primary,
+          onRevealComplete: () {
+            getIt<AppRouter>().replaceAll([const NotesRoute()]);
+          },
+        );
       },
       child: AuthScaffold(
         title: 'Вход',
@@ -34,9 +47,13 @@ class LoginPage extends StatelessWidget {
             return AuthForm(
               submitLabel: 'Войти',
               isLoading: state.isLoading,
+              submitButtonKey: _submitButtonKey,
               onSubmit: (email, password) async {
                 context.read<AuthBloc>().add(
-                  AuthSignInRequested(email: email, password: password),
+                  AuthSignInRequested(
+                    email: email,
+                    password: password,
+                  ),
                 );
               },
             );

@@ -109,7 +109,7 @@ class _EditNoteViewState extends State<_EditNoteView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _onSave(context),
         tooltip: 'save',
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.grey.shade700,
         shape: const CircleBorder(),
         child: const Icon(Icons.save, color: Colors.white),
       ),

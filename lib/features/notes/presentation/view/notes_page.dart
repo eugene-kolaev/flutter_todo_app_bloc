@@ -101,7 +101,7 @@ class NotesPage extends StatelessWidget {
             return FloatingActionButton(
               onPressed: () => _handleCreate(context),
               tooltip: 'add',
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Colors.grey.shade700,
               shape: const CircleBorder(),
               child: Icon(Icons.add, color: Colors.white),
             );

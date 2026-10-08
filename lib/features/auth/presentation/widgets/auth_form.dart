@@ -95,6 +95,10 @@ class _AuthFormState extends State<AuthForm> {
           SizedBox(
             height: 52,
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey.shade700,
+                foregroundColor: Colors.white,
+              ),
               key: widget.submitButtonKey,
               onPressed: widget.isLoading ? null : _handleSubmit,
               child: widget.isLoading
@@ -103,7 +107,7 @@ class _AuthFormState extends State<AuthForm> {
                       width: 22,
                       child: CircularProgressIndicator(strokeWidth: 2.5),
                     )
-                  : Text(widget.submitLabel),
+                  : Text(widget.submitLabel, style: TextStyle(fontSize: 16),),
             ),
           ),
         ],

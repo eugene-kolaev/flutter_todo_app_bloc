@@ -15,6 +15,7 @@ class AuthScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
