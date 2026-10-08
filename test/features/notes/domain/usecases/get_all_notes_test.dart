@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_todo_app/features/notes/domain/models/note.dart';
+import 'package:flutter_todo_app/features/notes/domain/repository/notes_repository.dart';
 import 'package:flutter_todo_app/features/notes/domain/usecases/get_all_notes.dart';
 import 'package:mockito/mockito.dart';
 
@@ -8,17 +9,18 @@ import '../../../../helpers/mocks.mocks.dart';
 void main() {
   late MockNotesRepository mockRepo;
 
+  final mock = MockNotesRepository();
+  expect(mock, isA<NotesRepository>());
+
   setUp(() {
     mockRepo = MockNotesRepository();
   });
 
   test('возвращает список из репозитория', () async {
-    when(() => mockRepo.getAll()).thenAnswer(
-          (invocation) => () async => [
-        Note(id: '1', text: 'A', date: DateTime(2025)),
-        Note(id: '2', text: 'B', date: DateTime(2025)),
-      ],
-    );
+    when(mock.getAll()).thenAnswer((_) async => <Note>[
+      Note(id: '1', text: 'A', date: DateTime(2025)),
+      Note(id: '2', text: 'B', date: DateTime(2025)),
+    ]);
 
     final useCase = GetAllNotes(mockRepo);
     final notes = await useCase();

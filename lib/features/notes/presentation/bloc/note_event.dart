@@ -4,6 +4,11 @@ abstract class NoteEvent {
   const NoteEvent();
 }
 
+class NoteUserIdChanged extends NoteEvent {
+  final String? userId;
+  const NoteUserIdChanged(this.userId);
+}
+
 class NoteLoad extends NoteEvent {
   const NoteLoad();
 }

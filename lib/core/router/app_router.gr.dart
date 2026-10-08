@@ -59,6 +59,22 @@ class EditNoteRouteArgs {
 }
 
 /// generated route for
+/// [LoginPage]
+class LoginRoute extends PageRouteInfo<void> {
+  const LoginRoute({List<PageRouteInfo>? children})
+    : super(LoginRoute.name, initialChildren: children);
+
+  static const String name = 'LoginRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LoginPage();
+    },
+  );
+}
+
+/// generated route for
 /// [NotesPage]
 class NotesRoute extends PageRouteInfo<void> {
   const NotesRoute({List<PageRouteInfo>? children})
@@ -70,6 +86,38 @@ class NotesRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const NotesPage();
+    },
+  );
+}
+
+/// generated route for
+/// [RegisterPage]
+class RegisterRoute extends PageRouteInfo<void> {
+  const RegisterRoute({List<PageRouteInfo>? children})
+    : super(RegisterRoute.name, initialChildren: children);
+
+  static const String name = 'RegisterRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const RegisterPage();
+    },
+  );
+}
+
+/// generated route for
+/// [SplashPage]
+class SplashRoute extends PageRouteInfo<void> {
+  const SplashRoute({List<PageRouteInfo>? children})
+    : super(SplashRoute.name, initialChildren: children);
+
+  static const String name = 'SplashRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SplashPage();
     },
   );
 }

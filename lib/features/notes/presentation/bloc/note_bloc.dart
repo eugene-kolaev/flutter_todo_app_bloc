@@ -13,12 +13,14 @@ part 'note_event.dart';
 
 part 'note_state.dart';
 
-@Injectable()
+@LazySingleton()
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final GetAllNotes _getAllNotes;
   final CreateNote _createNote;
   final UpdateNote _updateNote;
   final DeleteNote _deleteNote;
+
+  String? _currentUserId;
 
   NoteBloc({
     required GetAllNotes getAllNotes,
@@ -30,6 +32,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
        _updateNote = updateNote,
        _deleteNote = deleteNote,
        super(const NoteState()) {
+    on<NoteUserIdChanged>(_onUserIdChanged);
     on<NoteLoad>(_onLoad);
     on<NoteCreate>(_onCreate);
     on<NoteUpdate>(_onUpdate);
@@ -37,10 +40,25 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     on<NoteResetCreated>(_onResetCreated);
   }
 
+  Future<void> _onUserIdChanged(NoteUserIdChanged event, Emitter<NoteState> emit) async {
+_currentUserId = event.userId;
+if(_currentUserId == null) {
+  emit (const NoteState());
+} else {
+  add(const NoteLoad());
+}
+  }
+
   Future<void> _onLoad(NoteLoad event, Emitter<NoteState> emit) async {
+    final userId = _currentUserId;
+    if(userId == null) {
+      emit(const NoteState());
+      return;
+    }
+
     emit(state.copyWith(isLoading: true, clearError: true));
     try{
-      final notes = await _getAllNotes();
+      final notes = await _getAllNotes(userId);
       emit(state.copyWith(
         isLoading: false,
         isLoaded: true,
@@ -57,9 +75,11 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Future<void> _onCreate(NoteCreate event, Emitter<NoteState> emit) async {
+    final userId = _currentUserId;
+    if (userId == null) return;
     try {
-      final note = await _createNote();
-      final notes = await _getAllNotes();
+      final note = await _createNote(userId: userId);
+      final notes = await _getAllNotes(userId);
 
       emit(state.copyWith(
         notes: notes,
@@ -75,24 +95,32 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Future<void> _onUpdate(NoteUpdate event, Emitter<NoteState> emit) async{
-    if(!state.isLoaded) return;
-    final optimisticUpdate = state.notes.map((n) {
-      if (n.id == event.id) return n.copyWith(text: event.text);
-      return n;
-    }).toList();
-    emit(state.copyWith(notes: optimisticUpdate, clearError: true));
+    final userId = _currentUserId;
+    if(!state.isLoaded || _currentUserId == null) return;
+
+    final index = state.notes.indexWhere((n) => n.id == event.id);
+    if (index == 1) return;
+
+    final current = state.notes[index];
+    final updated = current.copyWith(text: event.text);
+
+    final optimistic = [...state.notes];
+    optimistic[index] = updated;
+    emit(state.copyWith(notes: optimistic, clearError: true));
 
     try {
-      await _updateNote(id: event.id, text: event.text);
+      await _updateNote(updated);
     } catch (e) {
       emit(state.copyWith(error: 'Не удалось сохранить заметку: $e'));
-      final notes = await _getAllNotes();
+      final notes = await _getAllNotes(userId!);
       emit(state.copyWith(notes: notes, clearError: true));
+      // await _reload(emit);
     }
   }
 
   Future<void> _onDelete(NoteDelete event, Emitter<NoteState> emit) async {
-    if (!state.isLoaded) return;
+    final userId = _currentUserId;
+    if (!state.isLoaded || _currentUserId == null) return;
 
     final optimisticDelete = state.notes.where((n) => n.id != event.id).toList();
     emit(state.copyWith(notes: optimisticDelete, clearError: true));
@@ -101,7 +129,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       await _deleteNote(event.id);
     } catch (e) {
       emit (state.copyWith(error: 'Не удалось удалить заметку: $e'));
-      final notes = await _getAllNotes();
+      final notes = await _getAllNotes(userId!);
       emit(state.copyWith(notes: notes, clearError: true));
     }
   }

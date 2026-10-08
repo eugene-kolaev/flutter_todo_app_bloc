@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_todo_app/core/router/app_router.dart';
+import 'package:flutter_todo_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_todo_app/features/notes/presentation/bloc/note_bloc.dart';
 import '../widgets/note_card.dart';
 
@@ -16,6 +17,7 @@ class NotesPage extends StatelessWidget {
       current.lastCreatedId != null &&
           previous.lastCreatedId != current.lastCreatedId,
       listener: (context, state) {
+        debugPrint('BlocListener: lastCreatedId=${state.lastCreatedId}');
         context.router.push(EditNoteRoute(id: state.lastCreatedId!));
         context.read<NoteBloc>().add(const NoteResetCreated());
       },
@@ -28,6 +30,12 @@ class NotesPage extends StatelessWidget {
             'Notes',
             style: TextStyle(fontWeight: FontWeight.w800, fontSize: 36),
           ),
+          actions: [
+            IconButton(icon: const Icon(Icons.logout),
+            tooltip: 'Выйти',
+              onPressed: () => _handleLogout(context),
+            ),
+          ],
         ),
         body: BlocBuilder<NoteBloc, NoteState>(
           builder: (context, state) {
@@ -101,6 +109,22 @@ class NotesPage extends StatelessWidget {
         ),
     ),
     );
+  }
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Выйти из аккаунта?"),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Отмена')),
+            TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text("Выйти")),
+          ],
+        ));
+
+    if(confirmed != true) return;
+    if(!context.mounted) return;
+
+    context.read<AuthBloc>().add(const AuthSignOutRequested());
   }
 
   void _handleCreate(BuildContext context) {

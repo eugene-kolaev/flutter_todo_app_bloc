@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 
 import '../repository/notes_repository.dart';
 
-@Injectable()
+@lazySingleton
 class DeleteNote {
   final NotesRepository _repository;
 

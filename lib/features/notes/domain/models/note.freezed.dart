@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Note {
 
- String get id; String get text; DateTime get date;
+ String get id; String get userId; String get text; DateTime get date;
 /// Create a copy of Note
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $NoteCopyWith<Note> get copyWith => _$NoteCopyWithImpl<Note>(this as Note, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Note&&(identical(other.id, id) || other.id == id)&&(identical(other.text, text) || other.text == text)&&(identical(other.date, date) || other.date == date));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Note&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.text, text) || other.text == text)&&(identical(other.date, date) || other.date == date));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,text,date);
+int get hashCode => Object.hash(runtimeType,id,userId,text,date);
 
 @override
 String toString() {
-  return 'Note(id: $id, text: $text, date: $date)';
+  return 'Note(id: $id, userId: $userId, text: $text, date: $date)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $NoteCopyWith<$Res>  {
   factory $NoteCopyWith(Note value, $Res Function(Note) _then) = _$NoteCopyWithImpl;
 @useResult
 $Res call({
- String id, String text, DateTime date
+ String id, String userId, String text, DateTime date
 });
 
 
@@ -62,9 +62,10 @@ class _$NoteCopyWithImpl<$Res>
 
 /// Create a copy of Note
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? text = null,Object? date = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? text = null,Object? date = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String text,  DateTime date)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String text,  DateTime date)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Note() when $default != null:
-return $default(_that.id,_that.text,_that.date);case _:
+return $default(_that.id,_that.userId,_that.text,_that.date);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.id,_that.text,_that.date);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String text,  DateTime date)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String text,  DateTime date)  $default,) {final _that = this;
 switch (_that) {
 case _Note():
-return $default(_that.id,_that.text,_that.date);case _:
+return $default(_that.id,_that.userId,_that.text,_that.date);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +194,10 @@ return $default(_that.id,_that.text,_that.date);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String text,  DateTime date)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String text,  DateTime date)?  $default,) {final _that = this;
 switch (_that) {
 case _Note() when $default != null:
-return $default(_that.id,_that.text,_that.date);case _:
+return $default(_that.id,_that.userId,_that.text,_that.date);case _:
   return null;
 
 }
@@ -208,10 +209,11 @@ return $default(_that.id,_that.text,_that.date);case _:
 
 
 class _Note extends Note {
-  const _Note({required this.id, required this.text, required this.date}): super._();
+  const _Note({required this.id, required this.userId, required this.text, required this.date}): super._();
   
 
 @override final  String id;
+@override final  String userId;
 @override final  String text;
 @override final  DateTime date;
 
@@ -225,16 +227,16 @@ _$NoteCopyWith<_Note> get copyWith => __$NoteCopyWithImpl<_Note>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Note&&(identical(other.id, id) || other.id == id)&&(identical(other.text, text) || other.text == text)&&(identical(other.date, date) || other.date == date));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Note&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.text, text) || other.text == text)&&(identical(other.date, date) || other.date == date));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,text,date);
+int get hashCode => Object.hash(runtimeType,id,userId,text,date);
 
 @override
 String toString() {
-  return 'Note(id: $id, text: $text, date: $date)';
+  return 'Note(id: $id, userId: $userId, text: $text, date: $date)';
 }
 
 
@@ -245,7 +247,7 @@ abstract mixin class _$NoteCopyWith<$Res> implements $NoteCopyWith<$Res> {
   factory _$NoteCopyWith(_Note value, $Res Function(_Note) _then) = __$NoteCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String text, DateTime date
+ String id, String userId, String text, DateTime date
 });
 
 
@@ -262,9 +264,10 @@ class __$NoteCopyWithImpl<$Res>
 
 /// Create a copy of Note
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? text = null,Object? date = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? text = null,Object? date = null,}) {
   return _then(_Note(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,

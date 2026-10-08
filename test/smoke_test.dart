@@ -14,9 +14,7 @@ void main() {
     print('is Mock: ${mock is Mock}');
     print('is NotesRepository: ${mock is NotesRepository}');
 
-    when(() => mock.getAll()).thenAnswer(
-          (invocation) => () async => <Note>[],
-    );
+    when(mock.getAll()).thenAnswer((_) async => <Note>[]);
 
     final result = await mock.getAll();
     expect(result, isEmpty);

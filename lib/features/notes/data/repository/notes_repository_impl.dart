@@ -13,8 +13,13 @@ class NotesRepositoryImpl implements NotesRepository {
   NotesRepositoryImpl(this.db);
 
   @override
-  Future<List<Note>> getAll() async {
-    final rows = await db.query(NotesTable.table, orderBy: 'date DESC');
+  Future<List<Note>> getAll(String userId) async {
+    final rows = await db.query(
+      NotesTable.table,
+      where: 'user_id = ?',
+      whereArgs: [userId],
+      orderBy: 'date DESC',
+    );
     return rows.map((row) => NoteModel.fromMap(row).toEntity()).toList();
   }
 
@@ -30,15 +35,15 @@ class NotesRepositoryImpl implements NotesRepository {
 
   @override
   Future<void> delete(String id) async {
-    await db.delete(
-      NotesTable.table,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete(NotesTable.table, where: 'id = ?', whereArgs: [id]);
   }
 
   @override
-  Future<void> deleteAll() async {
-    await db.delete(NotesTable.table);
+  Future<void> deleteAll(String userId) async {
+    await db.delete(
+      NotesTable.table,
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
   }
 }

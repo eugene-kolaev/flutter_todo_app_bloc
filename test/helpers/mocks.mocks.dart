@@ -35,9 +35,9 @@ class MockNotesRepository extends _i1.Mock implements _i2.NotesRepository {
   }
 
   @override
-  _i3.Future<List<_i4.Note>> getAll() =>
+  _i3.Future<List<_i4.Note>> getAll(String? userId) =>
       (super.noSuchMethod(
-            Invocation.method(#getAll, []),
+            Invocation.method(#getAll, [userId]),
             returnValue: _i3.Future<List<_i4.Note>>.value(<_i4.Note>[]),
           )
           as _i3.Future<List<_i4.Note>>);
@@ -61,9 +61,9 @@ class MockNotesRepository extends _i1.Mock implements _i2.NotesRepository {
           as _i3.Future<void>);
 
   @override
-  _i3.Future<void> deleteAll() =>
+  _i3.Future<void> deleteAll(String? userId) =>
       (super.noSuchMethod(
-            Invocation.method(#deleteAll, []),
+            Invocation.method(#deleteAll, [userId]),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )

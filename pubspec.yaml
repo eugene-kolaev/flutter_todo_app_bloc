@@ -48,6 +48,9 @@ dependencies:
   mockito: ^5.4.5
   sqflite_common_ffi: ^2.4.3
   bloc_test: ^10.0.0
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  cloud_firestore: ^6.10.0
 
 
 

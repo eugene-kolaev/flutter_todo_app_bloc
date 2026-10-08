@@ -19,6 +19,10 @@ abstract class AppDatabase {
         await db.execute(NotesTable.createTable);
       },
       onUpgrade: (db, oldVersion, newVersion) async {
+        if(oldVersion < 2) {
+          await db.execute('ALTER TABLE notes ADD COLUMN user_id TEXT NOT NULL DEFAULT ""');
+          await db.execute(NotesTable.createUserIndex);
+        }
       },
     );
   }
