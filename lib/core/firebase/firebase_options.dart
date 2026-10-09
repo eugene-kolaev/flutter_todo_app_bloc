@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_todo_app/core/firebase/firebase_config.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -47,29 +48,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB8G3AJaGOpSczVah8PAatyS3zuy1kLUUE',
-    appId: '1:864157729046:web:790bde17ea92b8f53e5037',
-    messagingSenderId: '864157729046',
-    projectId: 'flutter-todo-app-8dc15',
-    authDomain: 'flutter-todo-app-8dc15.firebaseapp.com',
-    storageBucket: 'flutter-todo-app-8dc15.firebasestorage.app',
-    measurementId: 'G-MTNHLP2828',
+    apiKey: FirebaseConfig.apiKeyWeb,
+    appId: FirebaseConfig.apiKeyWeb,
+    messagingSenderId: FirebaseConfig.messagingSenderId,
+    projectId: FirebaseConfig.projectId,
+    authDomain: FirebaseConfig.authDomain,
+    storageBucket: FirebaseConfig.storageBucket,
+    measurementId: FirebaseConfig.measurementId,
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBW_sARSNqwAAxm1CqGhEcHRXRfmXcvJH0',
-    appId: '1:864157729046:android:21ef6055eada3aa73e5037',
-    messagingSenderId: '864157729046',
-    projectId: 'flutter-todo-app-8dc15',
-    storageBucket: 'flutter-todo-app-8dc15.firebasestorage.app',
+    apiKey: FirebaseConfig.apiKeyAndroid,
+    appId: FirebaseConfig.appIdAndroid,
+    messagingSenderId: FirebaseConfig.messagingSenderId,
+    projectId: FirebaseConfig.projectId,
+    storageBucket: FirebaseConfig.storageBucket,
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDzttP5b2TrfDvUL3Ll4_AwCzvQlYrU7rI',
-    appId: '1:864157729046:ios:b8eb19abff26c2e43e5037',
-    messagingSenderId: '864157729046',
-    projectId: 'flutter-todo-app-8dc15',
-    storageBucket: 'flutter-todo-app-8dc15.firebasestorage.app',
-    iosBundleId: 'com.example.flutterTodoApp',
+    apiKey: FirebaseConfig.apiKeyIos,
+    appId: FirebaseConfig.appIdIos,
+    messagingSenderId: FirebaseConfig.messagingSenderId,
+    projectId: FirebaseConfig.projectId,
+    storageBucket: FirebaseConfig.storageBucket,
+    iosBundleId: FirebaseConfig.iosBudledId,
   );
 }
