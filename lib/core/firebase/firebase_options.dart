@@ -49,7 +49,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: FirebaseConfig.apiKeyWeb,
-    appId: FirebaseConfig.apiKeyWeb,
+    appId: FirebaseConfig.appIdWeb,
     messagingSenderId: FirebaseConfig.messagingSenderId,
     projectId: FirebaseConfig.projectId,
     authDomain: FirebaseConfig.authDomain,
